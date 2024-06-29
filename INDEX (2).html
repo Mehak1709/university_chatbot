@@ -73,50 +73,52 @@
       cursor: pointer;
     }
 
-    .suggestion-list {
-      margin-top: 10px;
+    .question-bar {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #6a0dad;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      line-height: 1.5;
+      z-index: 1;
     }
 
-    .suggestion-list button {
-      margin-right: 5px;
+    .question-bar p {
+      margin: 5px 0;
+      cursor: pointer;
     }
 
-    .auth-form {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .auth-form input {
-      flex-grow: 1;
-      margin-right: 5px;
+    .question-bar p:hover {
+      background-color: #872ecf;
     }
   </style>
 </head>
 <body>
+  <div class="question-bar">
+    <p onclick="handleQuestionClick('Admissions')">Tell me about admissions.</p>
+    <p onclick="handleQuestionClick('What courses do you offer?')">What courses do you offer?</p>
+    <p onclick="handleQuestionClick('How much are the tuition fees?')">How much are the tuition fees?</p>
+    <p onclick="handleQuestionClick('What are the campus facilities?')">What are the campus facilities?</p>
+    <p onclick="handleQuestionClick('Tell me about student life.')">Tell me about student life.</p>
+    <p onclick="handleQuestionClick('Do you offer scholarships?')">Do you offer scholarships?</p>
+    <p onclick="handleQuestionClick('Information for international students.')">Information for international students.</p>
+    <!-- Add more questions here -->
+  </div>
+
   <div class="chatbot-container">
     <div class="chatbot-header">
-      <h2>University Chatbot</h2>
+      <h2> Eternal University Chatbot</h2>
     </div>
     <div class="chatbot-body">
-      <div class="chat-bubble bot-bubble">Welcome to the University website! How can I assist you?</div>
+      <div class="chat-bubble bot-bubble">Welcome to the Eternal University website! How can I assist you?</div>
     </div>
     <div class="chatbot-input">
       <input type="text" class="chat-input" placeholder="Type your message...">
       <button class="send-button">Send</button>
-    </div>
-    <div class="suggestion-list">
-      <button onclick="handleQuestionClick('Admissions')">Admissions</button>
-      <button onclick="handleQuestionClick('Courses')">Courses</button>
-      <button onclick="handleQuestionClick('Tuition fees')">Tuition fees</button>
-      <button onclick="handleQuestionClick('Campus facilities')">Campus facilities</button>
-   
-    </div>
-    <div class="auth-form">
-      <input type="text" id="username-input" placeholder="Username">
-      <input type="password" id="password-input" placeholder="Password">
-      <button onclick="handleAuthentication()">Login</button>
     </div>
   </div>
 
@@ -125,25 +127,13 @@
     const chatInput = document.querySelector('.chat-input');
     const sendButton = document.querySelector('.send-button');
     const chatBody = document.querySelector('.chatbot-body');
-    const suggestionButtons = document.querySelectorAll('.suggestion-list button');
+    const questionBar = document.querySelector('.question-bar');
 
     sendButton.addEventListener('click', handleUserQuestion);
     chatInput.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
         handleUserQuestion();
       }
-    });
-
-    suggestionButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        const question = button.textContent;
-        addChatBubble(question, 'user');
-        const answer = getAnswerByQuestion(question);
-        setTimeout(() => {
-          addChatBubble(answer, 'bot');
-          scrollToBottom();
-        }, 500);
-      });
     });
 
     function handleUserQuestion() {
@@ -174,44 +164,45 @@
     function getAnswerByQuestion(question) {
       const lowerQuestion = question.toLowerCase();
       switch (lowerQuestion) {
+        case 'hey':
+        case 'hi':
+        case 'hello':
+          return 'Hello! How can I assist you today?';
+        case 'how are you':
+          return 'I am an AI chatbot, so I don\'t have feelings, but I am here to help you. How can I assist you?';
+        case 'about university':
+          return 'Our university is a leading institution that offers a wide range of programs across various faculties. We have state-of-the-art facilities, dedicated faculty members, and a vibrant campus life. To learn more, you can visit our website.';
+        case 'about studies':
+          return 'At our university, we offer diverse study programs that cater to different academic interests. Our courses are designed to provide a strong foundation and prepare students for their future careers. You can find detailed information about our study programs on our website.';
+        case 'about time':
+          const date = new Date();
+          return 'The current date and time are: ' + date.toLocaleString();
+        case 'about weather in the university':
+          return 'To get the latest weather information for our university, you can check a reliable weather website or app that provides local forecasts.';
+        case 'about faculty numbers':
+          return 'We have a highly qualified and dedicated faculty team comprising experienced professors, researchers, and industry professionals. The exact number may vary, but we prioritize maintaining a favorable student-to-faculty ratio for personalized learning experiences.';
         case 'admissions':
-          return 'For admissions information, please visit our website or contact the admissions office.';
+          return 'Our admissions process involves submitting an online application form, providing necessary documents, and meeting the eligibility criteria for the desired program. For more information and specific requirements, please visit our admissions page on the university website.';
         case 'courses':
-          return 'We offer a wide range of courses across various disciplines. You can find detailed information about our courses on our website.';
+          return 'We offer a wide range of courses in various disciplines, including Arts, Sciences, Business, Engineering, and more. To explore our course offerings, you can visit our website and browse through the programs and departments.';
         case 'tuition fees':
-          return 'The tuition fees may vary depending on the program and other factors. For specific details, please visit our website or contact the finance department.';
+          return 'The tuition fees vary depending on the program and the students residency status. You can find detailed information about tuition fees on our website or contact our admissions office for specific queries.';
         case 'campus facilities':
-          return 'Our campus is equipped with state-of-the-art facilities including libraries, labs, sports facilities, and more. You can explore our campus facilities on our website.';
-    
-          default:
-          return 'I apologize, but I could not find an answer to your question. Please contact our support team for further assistance. Admission office-6767500892 Support Team:9875678766';
+          return 'Our campus provides modern facilities to enhance the learning and living experience of students. These facilities include well-equipped classrooms, libraries, laboratories, sports facilities, student organizations, cafeterias, and more. To learn more about our campus facilities, visit our website.';
+        case 'student life':
+          return 'We offer a vibrant and engaging student life with numerous extracurricular activities, clubs, and events. Students can participate in sports, arts, cultural activities, community service, and various student organizations. Our goal is to provide a well-rounded educational experience that goes beyond academics.';
+        case 'scholarships':
+          return 'Yes, we offer scholarships and financial aid programs to eligible students. These scholarships are merit-based, need-based, or awarded for specific achievements. To learn more about the available scholarships and the application process, please visit our website or contact the financial aid office.';
+        case 'international students':
+          return 'We welcome international students and provide support services to ensure a smooth transition and successful academic journey. Our international student office assists with admissions, visa processes, orientation, cultural integration, and academic support. For more information, please visit our website.';
+        default:
+          return 'I\'m sorry, but I don\'t have the answer to that question. Please try asking something else.';
       }
     }
 
     function handleQuestionClick(question) {
       chatInput.value = question;
       handleUserQuestion();
-    }
-
-    function handleAuthentication() {
-      const username = document.getElementById('username-input').value.trim();
-      const password = document.getElementById('password-input').value.trim();
-
-      // Perform authentication logic here, e.g., check username and password against a database or API
-      
-      // Example implementation: Only allow access if username is "admin" and password is "password"
-      // if (username === 'admin' && password === 'password') {
-      //   // Show authenticated user's specific content or enable personalized features
-      //   addChatBubble(`You are now authenticated as ${username}`, 'bot');
-      // } else {
-      //   addChatBubble('Invalid username or password. Please try again.', 'bot');
-      // }
-
-      // Clear the input fields
-      document.getElementById('username-input').value = '';
-      document.getElementById('password-input').value = '';
-
-      scrollToBottom();
     }
   </script>
 </body>
