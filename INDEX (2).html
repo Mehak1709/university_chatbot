@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>University Chatbot</title>
+  <style>
+    /* CSS styles here */
+    .chatbot-container {
+      width: 400px;
+      margin: 20px auto;
+      background-color: #f0f5f9;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+    }
+
+    .chatbot-header {
+      background-color: #274472;
+      color: #fff;
+      padding: 10px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .chatbot-body {
+      padding: 20px;
+      height: 300px;
+      overflow-y: auto;
+    }
+
+    .chat-bubble {
+      background-color: #fff;
+      color: #000;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .user-bubble {
+      background-color: #ebf5fc;
+      color: #000;
+      text-align: right;
+    }
+
+    .bot-bubble {
+      background-color: #fff;
+      color: #000;
+      text-align: left;
+    }
+
+    .chatbot-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background-color: #fff;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .chat-input {
+      flex-grow: 1;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .send-button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #274472;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .suggestion-list {
+      margin-top: 10px;
+    }
+
+    .suggestion-list button {
+      margin-right: 5px;
+    }
+
+    .auth-form {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .auth-form input {
+      flex-grow: 1;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chatbot-container">
+    <div class="chatbot-header">
+      <h2>University Chatbot</h2>
+    </div>
+    <div class="chatbot-body">
+      <div class="chat-bubble bot-bubble">Welcome to the University website! How can I assist you?</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" class="chat-input" placeholder="Type your message...">
+      <button class="send-button">Send</button>
+    </div>
+    <div class="suggestion-list">
+      <button onclick="handleQuestionClick('Admissions')">Admissions</button>
+      <button onclick="handleQuestionClick('Courses')">Courses</button>
+      <button onclick="handleQuestionClick('Tuition fees')">Tuition fees</button>
+      <button onclick="handleQuestionClick('Campus facilities')">Campus facilities</button>
+   
+    </div>
+    <div class="auth-form">
+      <input type="text" id="username-input" placeholder="Username">
+      <input type="password" id="password-input" placeholder="Password">
+      <button onclick="handleAuthentication()">Login</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript code here
+    const chatInput = document.querySelector('.chat-input');
+    const sendButton = document.querySelector('.send-button');
+    const chatBody = document.querySelector('.chatbot-body');
+    const suggestionButtons = document.querySelectorAll('.suggestion-list button');
+
+    sendButton.addEventListener('click', handleUserQuestion);
+    chatInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        handleUserQuestion();
+      }
+    });
+
+    suggestionButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const question = button.textContent;
+        addChatBubble(question, 'user');
+        const answer = getAnswerByQuestion(question);
+        setTimeout(() => {
+          addChatBubble(answer, 'bot');
+          scrollToBottom();
+        }, 500);
+      });
+    });
+
+    function handleUserQuestion() {
+      const question = chatInput.value.trim();
+      if (question !== '') {
+        addChatBubble(question, 'user');
+        const answer = getAnswerByQuestion(question);
+        setTimeout(() => {
+          addChatBubble(answer, 'bot');
+          scrollToBottom();
+        }, 500);
+        chatInput.value = '';
+      }
+    }
+
+    function addChatBubble(message, type) {
+      const bubble = document.createElement('div');
+      bubble.classList.add('chat-bubble');
+      bubble.classList.add(type + '-bubble');
+      bubble.textContent = message;
+      chatBody.appendChild(bubble);
+    }
+
+    function scrollToBottom() {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function getAnswerByQuestion(question) {
+      const lowerQuestion = question.toLowerCase();
+      switch (lowerQuestion) {
+        case 'admissions':
+          return 'For admissions information, please visit our website or contact the admissions office.';
+        case 'courses':
+          return 'We offer a wide range of courses across various disciplines. You can find detailed information about our courses on our website.';
+        case 'tuition fees':
+          return 'The tuition fees may vary depending on the program and other factors. For specific details, please visit our website or contact the finance department.';
+        case 'campus facilities':
+          return 'Our campus is equipped with state-of-the-art facilities including libraries, labs, sports facilities, and more. You can explore our campus facilities on our website.';
+    
+          default:
+          return 'I apologize, but I could not find an answer to your question. Please contact our support team for further assistance. Admission office-6767500892 Support Team:9875678766';
+      }
+    }
+
+    function handleQuestionClick(question) {
+      chatInput.value = question;
+      handleUserQuestion();
+    }
+
+    function handleAuthentication() {
+      const username = document.getElementById('username-input').value.trim();
+      const password = document.getElementById('password-input').value.trim();
+
+      // Perform authentication logic here, e.g., check username and password against a database or API
+      
+      // Example implementation: Only allow access if username is "admin" and password is "password"
+      if (username === 'admin' && password === 'password') {
+        // Show authenticated user's specific content or enable personalized features
+        addChatBubble(`You are now authenticated as ${username}`, 'bot');
+      } else {
+        addChatBubble('Invalid username or password. Please try again.', 'bot');
+      }
+
+      // Clear the input fields
+      document.getElementById('username-input').value = '';
+      document.getElementById('password-input').value = '';
+
+      scrollToBottom();
+    }
+  </script>
+</body>
+</html>
